@@ -26,9 +26,9 @@ services:
       context: ./db/mlflow
     environment:
       MLFLOW_BACKEND_STORE_URI: sqlite:////mlflow/mlflow.db
-      MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlflow/artifacts
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: mlflow-artifacts:/
     ports:
-      - "5000:5000"
+      - "5002:5000"
     volumes:
       - mlflow_data:/mlflow
 

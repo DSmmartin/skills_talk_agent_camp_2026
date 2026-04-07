@@ -1,0 +1,28 @@
+[project]
+name = "skills-talk-agent-camp-2026"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "chromadb>=1.5.6",
+    "clickhouse-connect>=0.15.1",
+    "loguru>=0.7.3",
+    "mlflow>=3.10.1",
+    "openai-agents>=0.13.5",
+    "pydantic>=2.12.5",
+    "python-dotenv>=1.2.2",
+    "textual>=8.2.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+]
+
+[tool.pytest.ini_options]
+markers = [
+    "pre_migration: Act 1 tests — pre-migration schema (merged UInt8)",
+    "post_migration: Act 2 tests — post-migration schema (merged_at DateTime NULL)",
+]

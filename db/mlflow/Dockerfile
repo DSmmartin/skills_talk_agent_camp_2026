@@ -6,14 +6,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     MLFLOW_HOST=0.0.0.0 \
     MLFLOW_PORT=5000 \
     MLFLOW_BACKEND_STORE_URI=sqlite:////mlflow/mlflow.db \
-    MLFLOW_DEFAULT_ARTIFACT_ROOT=/mlflow/artifacts \
+    MLFLOW_DEFAULT_ARTIFACT_ROOT=mlflow-artifacts:/ \
     MLFLOW_TRACKING_URI=http://127.0.0.1:5000 \
     MLFLOW_EXPERIMENT_NAME=ghost-contributors-demo \
     GIT_PYTHON_REFRESH=quiet
 
 WORKDIR /mlflow
 
-RUN pip install --no-cache-dir mlflow==2.21.3
+RUN pip install --no-cache-dir mlflow==3.10.1
 
 RUN mkdir -p /mlflow/artifacts /mlflow/init
 

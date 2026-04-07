@@ -58,10 +58,30 @@ Notes:
 
 This repo is designed to host multiple demos over time.
 
-- **Demo 01: Ghost Contributors**
-  Agentic NL2SQL demo over GitHub pull-request events, used to illustrate how Skills and developer procedures improve reliability during controlled changes (for example, schema evolution).
+### Demo 01 — Ghost Contributors
+
+> *"Show me repositories where users opened PRs but never got one merged — the ghost contributors"*
+
+An agentic NL2SQL system that answers natural language questions about GitHub contributor behaviour using the **AgentAsTools** pattern. The demo has three acts:
+
+| Act | What happens |
+|-----|-------------|
+| **Act 1 — It works** | Agent answers the ghost contributor question correctly via `AgentRAG` + `AgentNL2SQL` |
+| **Act 2 — It breaks** | A schema migration renames `merged UInt8` → `merged_at DateTime NULL`; the system silently returns wrong answers across all four layers |
+| **Act 3 — It heals** | Developer runs `schema-sync`; it detects drift and patches prompts, RAG, schema docs, and tool descriptions in one pass |
+
+The key point: **Act 3 shows how to formalise a developer procedure for a fully expected situation** — schema migrations are predictable; `schema-sync` is the repeatable procedure for handling them.
+
+**Stack:** OpenAI Agents SDK · ClickHouse · ChromaDB · MLflow · Textual TUI · Python 3.14
+
+```bash
+make up && make seed && make seed-vectors
+python agentic_system/main.py
+```
+
+→ Full details: [`agentic_system/README.md`](agentic_system/README.md)
 
 ## More Detail
 
 For technical infrastructure details and service-by-service purpose:
-[db/README.md](/Users/mmartin/projects/skills_talk_agent_camp_2026/db/README.md)
+[db/README.md](db/README.md)
