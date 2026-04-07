@@ -1,0 +1,38 @@
+services:
+  clickhouse:
+    build:
+      context: ./db/clickhouse
+    environment:
+      CLICKHOUSE_SKIP_USER_SETUP: "1"
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./db/clickhouse/init/01_create_table.sql:/docker-entrypoint-initdb.d/01_create_table.sql:ro
+      - ./db/clickhouse/init/02_seed_data.sh:/opt/demo/init/02_seed_data.sh:ro
+      - ./db/clickhouse/config:/etc/clickhouse-server/config.d:ro
+
+  chromadb:
+    build:
+      context: ./db/vectordb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
+
+  mlflow:
+    build:
+      context: ./db/mlflow
+    environment:
+      MLFLOW_BACKEND_STORE_URI: sqlite:////mlflow/mlflow.db
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlflow/artifacts
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow_data:/mlflow
+
+volumes:
+  clickhouse_data:
+  chromadb_data:
+  mlflow_data:

@@ -1,0 +1,29 @@
+# Ghost Contributors Example
+
+Collection: qa_examples
+Question: Show me repositories where users opened PRs but never got one merged.
+Intent: ghost contributors
+State: pre-migration
+
+Use this example when the user asks about ghost contributors, churned contributors, or contributors whose pull requests were never merged.
+
+Recommended SQL:
+
+```sql
+SELECT
+    repo_name,
+    actor_login,
+    countIf(action = 'opened')                AS prs_opened,
+    countIf(action = 'closed' AND merged = 1) AS prs_merged
+FROM github_events
+WHERE event_type = 'PullRequestEvent'
+GROUP BY repo_name, actor_login
+HAVING prs_opened > 0 AND prs_merged = 0
+ORDER BY prs_opened DESC
+LIMIT 50;
+```
+
+Why it works:
+- opened counts contributor pull request attempts.
+- closed and merged = 1 counts pull requests that actually landed.
+- prs_opened > 0 and prs_merged = 0 isolates contributors whose pull requests were never merged.
