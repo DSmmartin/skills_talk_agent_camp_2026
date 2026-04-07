@@ -19,7 +19,7 @@ ifneq ($(MLFLOW_HOST_PORT),5000)
 SETUP_MLFLOW_ARG := --mlflow-host-port $(MLFLOW_HOST_PORT)
 endif
 
-.PHONY: help up down seed seed-vectors migrate rollback reset logs
+.PHONY: help up down seed seed-vectors migrate rollback reset logs clean-complete
 
 help:
 	@printf '%s\n' 'Available targets:'
@@ -31,6 +31,7 @@ help:
 	@printf '%s\n' '  make rollback       Run schema rollback script (when available)'
 	@printf '%s\n' '  make reset          Recreate infra from scratch (clears volumes)'
 	@printf '%s\n' '  make logs           Print service logs'
+	@printf '%s\n' '  make clean-complete Nuclear clean: stop containers, remove images, volumes, and free ports'
 
 up:
 	./scripts/setup_infra.sh $(SETUP_MLFLOW_ARG)
@@ -66,3 +67,19 @@ reset:
 
 logs:
 	$(COMPOSE_CMD) logs --tail 200
+
+clean-complete:
+	@printf '%s\n' '==> Stopping and removing containers, networks, volumes, and images...'
+	$(COMPOSE_CMD) down --volumes --rmi all --remove-orphans
+	@printf '%s\n' '==> Freeing ports (8123 9000 8000 5002)...'
+	@for port in 8123 9000 8000 5002; do \
+		pids=$$(lsof -ti tcp:$$port 2>/dev/null); \
+		if [ -n "$$pids" ]; then \
+			printf 'Killing PIDs on port %s: %s\n' "$$port" "$$pids"; \
+			kill -9 $$pids 2>/dev/null || true; \
+		fi; \
+	done
+	@printf '%s\n' '==> Pruning dangling images and build cache...'
+	docker image prune -f
+	docker builder prune -f
+	@printf '%s\n' '==> Done.'
