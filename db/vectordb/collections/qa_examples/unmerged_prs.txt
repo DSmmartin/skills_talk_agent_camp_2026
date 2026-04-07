@@ -1,0 +1,31 @@
+# Unmerged Pull Requests Example
+
+Collection: qa_examples
+Question: Which repositories have contributors with multiple unmerged pull requests?
+Intent: unmerged pull requests
+State: pre-migration
+
+Use this example when the user asks about unmerged PRs, rejected PRs, or contributors with several pull requests that did not merge.
+
+Recommended SQL:
+
+```sql
+SELECT
+    repo_name,
+    actor_login,
+    countIf(action = 'opened')                AS prs_opened,
+    avgIf(created_at, action = 'closed'
+          AND merged = 0)                     AS avg_close_time
+FROM github_events
+WHERE event_type = 'PullRequestEvent'
+  AND merged = 0
+GROUP BY repo_name, actor_login
+HAVING prs_opened >= 3
+ORDER BY prs_opened DESC
+LIMIT 30;
+```
+
+Why it works:
+- merged = 0 keeps the focus on pull requests that were not merged.
+- action = 'closed' and merged = 0 captures rejected pull request outcomes.
+- prs_opened >= 3 highlights repeat contributors with a pattern of unmerged pull requests.

@@ -1,0 +1,22 @@
+# Pull Request Fields for github_events
+
+Collection: schema_docs
+Table: github_events
+State: pre-migration
+
+Use this chunk when the user asks about pull requests, merge status, ghost contributors, or unmerged pull requests.
+
+Relevant fields for pull request analysis:
+- event_type String: use PullRequestEvent to focus on pull request activity.
+- action LowCardinality(String): common values include opened and closed.
+- actor_login String: contributor login for grouping by user.
+- repo_name String: repository name for grouping by project.
+- created_at DateTime: event timestamp for ordering and time-based analysis.
+- merged UInt8: pre-migration merge flag where 1 means the pull request was merged and 0 means it was not merged.
+- number UInt32: pull request number.
+- title String: pull request title.
+
+Guidance:
+- Use merged = 1 to identify merged pull requests.
+- Use merged = 0 to identify pull requests that were closed without being merged.
+- For ghost contributor analysis, group by repo_name and actor_login, count opened pull requests, and compare against merged pull requests.
