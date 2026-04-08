@@ -29,6 +29,7 @@ Usage:
 from __future__ import annotations
 
 from agents import TResponseInputItem
+from loguru import logger
 
 
 class ConversationMemory:
@@ -60,13 +61,17 @@ class ConversationMemory:
         user message appended so the agent sees the full conversation.
         """
         if not self._history:
+            logger.debug("ConversationMemory build_input: first turn")
             return question
+        logger.debug("ConversationMemory build_input: prior_turns={}", self.turn_count)
         return self._history + [{"role": "user", "content": question}]
 
     def update(self, result: object) -> None:
         """Capture history from a completed RunResult or RunResultStreaming."""
         self._history = result.to_input_list()  # type: ignore[attr-defined]
+        logger.debug("ConversationMemory update: items={}", len(self._history))
 
     def clear(self) -> None:
         """Discard all history (start a new session)."""
         self._history.clear()
+        logger.info("ConversationMemory cleared")

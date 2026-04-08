@@ -28,6 +28,8 @@ def run_sql_core(sql: str) -> str:
     Returns:
         A JSON string containing the SQL executed, row count, and up to 50 result rows.
     """
+    logger.info("run_sql start")
+    logger.debug("run_sql SQL: {}", sql.strip())
     try:
         client = _get_client()
     except Exception as exc:
@@ -53,7 +55,7 @@ def run_sql_core(sql: str) -> str:
         result = client.query(sql)
         rows = list(result.named_results())
         row_count = len(rows)
-        logger.debug("run_sql returned {} rows. SQL: {}", row_count, sql.strip())
+        logger.info("run_sql returned {} rows", row_count)
         return json.dumps({
             "sql": sql.strip(),
             "row_count": row_count,

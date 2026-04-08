@@ -14,16 +14,25 @@ from pathlib import Path
 
 from loguru import logger
 
+from agentic_system.config import settings
 # Remove the default loguru handler (stdout).
 logger.remove()
 
 # Ensure logs/ directory exists.
 Path("logs").mkdir(exist_ok=True)
 
-# One file per session, named by start time. DEBUG level captures all agent activity.
+# LOG_LEVEL controls verbosity; defaults to WARNING.
+log_level = (settings.log_level or "WARNING").upper()
+
+# One file per session, named by start time.
 logger.add(
     "logs/session_{time}.log",
-    level="DEBUG",
-    format="{time} | {level} | {name} | {message}",
+    level=log_level,
+    format=(
+        "{time:YYYY-MM-DD HH:mm:ss.SSS} | {level} | {process}:{thread} | "
+        "{name}:{function}:{line} | {message}"
+    ),
     enqueue=True,  # thread-safe async writes — safe with Textual's event loop
+    backtrace=True,
+    diagnose=False,
 )

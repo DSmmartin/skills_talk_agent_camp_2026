@@ -7,6 +7,7 @@ agents tracing (MLflow handles it instead).
 """
 
 import mlflow
+from loguru import logger
 from agents import (
     set_default_openai_api,
     set_default_openai_client,
@@ -31,6 +32,11 @@ def setup_openai() -> None:
     mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
     mlflow.set_experiment(settings.mlflow_experiment_name)
     mlflow.openai.autolog()
+    logger.info(
+        "MLflow configured: tracking_uri={}, experiment={}",
+        settings.mlflow_tracking_uri,
+        settings.mlflow_experiment_name,
+    )
 
     if settings.openai_provider == "azure":
         from openai import AsyncAzureOpenAI
@@ -44,6 +50,11 @@ def setup_openai() -> None:
         )
         set_default_openai_client(client=client)
         set_default_openai_api("chat_completions")
+        logger.info(
+            "OpenAI provider=azure model={} deployment={}",
+            settings.openai_model,
+            settings.azure_openai_deployment,
+        )
 
     else:
         from openai import AsyncOpenAI
@@ -53,5 +64,7 @@ def setup_openai() -> None:
         client = AsyncOpenAI(api_key=creds.api_key)
         set_default_openai_client(client=client)
         set_default_openai_api("chat_completions")
+        logger.info("OpenAI provider=openai model={}", settings.openai_model)
 
     set_tracing_disabled(disabled=True)
+    logger.debug("Agents SDK tracing disabled (MLflow is the active tracer)")
