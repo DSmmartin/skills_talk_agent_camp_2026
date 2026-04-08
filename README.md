@@ -62,26 +62,24 @@ This repo is designed to host multiple demos over time.
 
 > *"Show me repositories where users opened PRs but never got one merged — the ghost contributors"*
 
-An agentic NL2SQL system that answers natural language questions about GitHub contributor behaviour using the **AgentAsTools** pattern. The demo has three acts:
+An agentic NL2SQL system that answers natural language questions about GitHub contributor behaviour using the **AgentAsTools** pattern.
 
-| Act | What happens |
-|-----|-------------|
-| **Act 1 — It works** | Agent answers the ghost contributor question correctly via `AgentRAG` + `AgentNL2SQL` |
-| **Act 2 — It breaks** | A schema migration renames `merged UInt8` → `merged_at DateTime NULL`; the system silently returns wrong answers across all four layers |
-| **Act 3 — It heals** | Developer runs `schema-sync`; it detects drift and patches prompts, RAG, schema docs, and tool descriptions in one pass |
+Current status (2026-04-08): **Epics 1–4 complete** (Infrastructure, Agentic System, Migration Scripts, Developer Tools). **Epic 5 (Tests)** is next.
 
-The key point: **Act 3 shows how to formalise a developer procedure for a fully expected situation** — schema migrations are predictable; `schema-sync` is the repeatable procedure for handling them.
+| Act | What happens | Primary command |
+|-----|-------------|-----------------|
+| **Act 1 — It works** | Agent answers the ghost contributor question correctly via `AgentRAG` + `AgentNL2SQL`. | `uv run python agentic_system/main.py` |
+| **Act 2 — It breaks** | A schema migration introduces `merged_at Nullable(DateTime)` and legacy `merged = 1` logic starts returning 0 rows silently across four layers. | `make migrate` |
+| **Act 3 — It heals** | `schema_sync` patches YAML contract, ChromaDB chunks, NL2SQL prompt, and RAG prompt in one procedure. Skill progression examples live in `dev_tools/skill_examples/`. | `make schema-sync` |
+
+The key point: **Act 3 formalises a predictable developer response**. Schema migrations are expected events, and `schema_sync` makes the repair path repeatable.
 
 **Stack:** OpenAI Agents SDK · ClickHouse · ChromaDB · MLflow · Textual TUI · Python 3.14
 
-```bash
-make up && make seed && make seed-vectors
-python agentic_system/main.py
-```
-
-→ Full details: [`agentic_system/README.md`](agentic_system/README.md)
 
 ## More Detail
 
-For technical infrastructure details and service-by-service purpose:
-[db/README.md](db/README.md)
+- Product backlog and epic status: [`PRODUCT_BACKLOG.md`](PRODUCT_BACKLOG.md)
+- Agent architecture and runtime details: [`agentic_system/README.md`](agentic_system/README.md)
+- Act 3 developer tools and skill progression: [`dev_tools/README.md`](dev_tools/README.md)
+- Infrastructure and service-level details: [`db/README.md`](db/README.md)
