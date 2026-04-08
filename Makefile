@@ -19,7 +19,7 @@ ifneq ($(MLFLOW_HOST_PORT),5000)
 SETUP_MLFLOW_ARG := --mlflow-host-port $(MLFLOW_HOST_PORT)
 endif
 
-.PHONY: help up down seed seed-vectors migrate rollback validate-schema reset logs clean-complete
+.PHONY: help up down seed seed-vectors migrate rollback validate-schema schema-sync schema-sync-dry reset logs clean-complete
 
 help:
 	@printf '%s\n' 'Available targets:'
@@ -30,6 +30,8 @@ help:
 	@printf '%s\n' '  make migrate        Act 2: rename merged → merged_at (silent failure)'
 	@printf '%s\n' '  make rollback       Restore pre-migration schema + ChromaDB state'
 	@printf '%s\n' '  make validate-schema Diff live ClickHouse schema vs YAML contract'
+	@printf '%s\n' '  make schema-sync    Act 3: patch all layers after migration'
+	@printf '%s\n' '  make schema-sync-dry Act 3: dry-run schema-sync (show changes only)'
 	@printf '%s\n' '  make reset          Recreate infra from scratch (clears volumes)'
 	@printf '%s\n' '  make logs           Print service logs'
 	@printf '%s\n' '  make clean-complete Nuclear clean: stop containers, remove images, volumes, and free ports'
@@ -54,6 +56,12 @@ rollback:
 
 validate-schema:
 	uv run python scripts/validate_schema.py
+
+schema-sync:
+	uv run python dev_tools/schema_sync.py --table github_events
+
+schema-sync-dry:
+	uv run python dev_tools/schema_sync.py --table github_events --dry-run
 
 reset:
 	./scripts/cleanup_infra.sh --clear-volumes
