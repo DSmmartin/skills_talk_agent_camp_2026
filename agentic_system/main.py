@@ -11,10 +11,13 @@ Import order is deliberate:
 
 import agentic_system.observability.logger  # noqa: F401 — side-effect: removes stdout
 
+from loguru import logger
+
 from agentic_system.setup import setup_openai
 from agentic_system.tui.app import GhostContributorsApp
 
 setup_openai()
+logger.info("TUI startup: Ghost Contributors app")
 
 if __name__ == "__main__":
     GhostContributorsApp().run()

@@ -49,6 +49,8 @@ def vector_search_core(query: str) -> str:
     Returns:
         Relevant schema field descriptions and example SQL snippets as a formatted string.
     """
+    logger.info("vector_search start")
+    logger.debug("vector_search query: {!r}", query)
     try:
         client = _get_client()
     except Exception as exc:
@@ -82,7 +84,7 @@ def vector_search_core(query: str) -> str:
         logger.warning("vector_search returned no chunks for query: {!r}", query)
         return "No relevant context found in the vector database."
 
-    logger.debug("vector_search returned {} chunks for query: {!r}", len(chunks), query)
+    logger.info("vector_search returned {} chunks", len(chunks))
     return "\n\n---\n\n".join(chunks)
 
 
