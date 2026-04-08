@@ -19,7 +19,7 @@ ifneq ($(MLFLOW_HOST_PORT),5000)
 SETUP_MLFLOW_ARG := --mlflow-host-port $(MLFLOW_HOST_PORT)
 endif
 
-.PHONY: help up down seed seed-vectors migrate rollback reset logs clean-complete
+.PHONY: help up down seed seed-vectors migrate rollback validate-schema reset logs clean-complete
 
 help:
 	@printf '%s\n' 'Available targets:'
@@ -27,8 +27,9 @@ help:
 	@printf '%s\n' '  make down           Stop infra stack'
 	@printf '%s\n' '  make seed           Seed ClickHouse sample PR dataset'
 	@printf '%s\n' '  make seed-vectors   Seed ChromaDB collections'
-	@printf '%s\n' '  make migrate        Run schema migration script (when available)'
-	@printf '%s\n' '  make rollback       Run schema rollback script (when available)'
+	@printf '%s\n' '  make migrate        Act 2: rename merged → merged_at (silent failure)'
+	@printf '%s\n' '  make rollback       Restore pre-migration schema + ChromaDB state'
+	@printf '%s\n' '  make validate-schema Diff live ClickHouse schema vs YAML contract'
 	@printf '%s\n' '  make reset          Recreate infra from scratch (clears volumes)'
 	@printf '%s\n' '  make logs           Print service logs'
 	@printf '%s\n' '  make clean-complete Nuclear clean: stop containers, remove images, volumes, and free ports'
@@ -46,20 +47,13 @@ seed-vectors:
 	python3 db/vectordb/init/seed_vectors.py --base-url "$(CHROMA_BASE_URL)"
 
 migrate:
-	@if [ -f scripts/migrate_schema.py ]; then \
-		python3 scripts/migrate_schema.py; \
-	else \
-		printf '%s\n' 'scripts/migrate_schema.py is not available yet (planned in MIG-01).'; \
-		exit 1; \
-	fi
+	uv run python scripts/migrate_schema.py
 
 rollback:
-	@if [ -f scripts/rollback_schema.py ]; then \
-		python3 scripts/rollback_schema.py; \
-	else \
-		printf '%s\n' 'scripts/rollback_schema.py is not available yet (planned in MIG-03).'; \
-		exit 1; \
-	fi
+	uv run python scripts/rollback_schema.py
+
+validate-schema:
+	uv run python scripts/validate_schema.py
 
 reset:
 	./scripts/cleanup_infra.sh --clear-volumes
