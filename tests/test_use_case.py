@@ -67,3 +67,34 @@ def test_rag_returns_correct_field_pre_migration(mock_chroma_client):
     assert "merged" in context, "Expected 'merged' in RAG context"
     assert "UInt8" in context, "Expected 'UInt8' in RAG context"
     assert "merged_at" not in context, "Did not expect 'merged_at' in pre-migration RAG context"
+
+
+@pytest.mark.post_migration
+def test_ghost_contributor_query_post_migration(mock_clickhouse_client_post_migration):
+    """After migration, legacy merged=1 SQL should return zero rows silently."""
+    with patch(
+        "agentic_system.agents_core.nl2sql.tools.run_sql._get_client",
+        return_value=mock_clickhouse_client_post_migration,
+    ):
+        result_json = run_sql_core(GHOST_CONTRIBUTOR_SQL)
+
+    result = json.loads(result_json)
+    assert result.get("error") is None, f"Unexpected error: {result.get('error')}"
+    assert "merged = 1" in GHOST_CONTRIBUTOR_SQL
+    assert result["row_count"] == 0
+    assert result["rows"] == []
+
+
+@pytest.mark.post_migration
+def test_rag_returns_stale_merged_chunk_post_migration(mock_chroma_client_post_migration):
+    """After migration but before sync, RAG still returns stale merged UInt8 context."""
+    with patch(
+        "agentic_system.agents_core.rag.tools.vector_search._get_client",
+        return_value=mock_chroma_client_post_migration,
+    ):
+        context = vector_search_core("ghost contributors merged PR")
+
+    assert "merged" in context, "Expected stale 'merged' field in RAG context"
+    assert "UInt8" in context, "Expected stale 'UInt8' type in RAG context"
+    assert "merged = 1" in context, "Expected stale SQL predicate in RAG context"
+    assert "merged_at" not in context, "Did not expect post-sync field before schema_sync"
