@@ -1,0 +1,44 @@
+table: github_events
+schema_state: post_migration_synced
+columns:
+  - name: event_type
+    type: String
+    description: GitHub event type (e.g. PullRequestEvent, PushEvent, IssuesEvent)
+
+  - name: action
+    type: LowCardinality(String)
+    description: Action within the event (e.g. opened, closed, reopened, synchronize)
+
+  - name: actor_login
+    type: String
+    description: GitHub username of the actor who triggered the event
+
+  - name: repo_name
+    type: String
+    description: Full repository name in owner/repo format (e.g. kubernetes/kubernetes)
+
+  - name: created_at
+    type: DateTime
+    description: UTC timestamp when the event occurred
+
+  - name: merged
+    type: UInt8
+    description: >
+      Legacy pre-migration field. Zeroed out after migration — always 0.
+      Do NOT use merged = 1 after migration; use merged_at IS NOT NULL instead.
+
+  - name: number
+    type: UInt32
+    description: Pull request or issue number within the repository
+
+  - name: title
+    type: String
+    description: Title of the pull request or issue
+
+  - name: merged_at
+    type: Nullable(DateTime)
+    description: >
+      Post-migration field. Timestamp when the pull request was merged,
+      or NULL if not merged. Replaces the pre-migration merged UInt8 flag.
+      Use merged_at IS NOT NULL to filter merged PRs and
+      merged_at IS NULL for unmerged.

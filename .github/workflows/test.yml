@@ -1,0 +1,31 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+      - 'epic*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup uv + Python
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: '3.14'
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Run test suite
+        env:
+          OPENAI_API_KEY: test
+        run: uv run pytest -m "pre_migration or post_migration or schema_sync or complete_flow" --tb=short -q

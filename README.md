@@ -64,7 +64,7 @@ This repo is designed to host multiple demos over time.
 
 An agentic NL2SQL system that answers natural language questions about GitHub contributor behaviour using the **AgentAsTools** pattern.
 
-Current status (2026-04-08): **Epics 1–4 complete** (Infrastructure, Agentic System, Migration Scripts, Developer Tools). **Epic 5 (Tests)** is next.
+Current status (2026-04-08): **Epics 1–5 complete** (Infrastructure, Agentic System, Migration Scripts, Developer Tools, Tests).
 
 | Act | What happens | Primary command |
 |-----|-------------|-----------------|
