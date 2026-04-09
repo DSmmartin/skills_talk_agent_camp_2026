@@ -2,6 +2,9 @@
 
 This repository supports a workshop series about building reusable **Skills** for real projects.
 
+> **Workshop participants:** start here → [`AUDIENCE_GUIDE.md`](AUDIENCE_GUIDE.md)
+> Full step-by-step guide including requirements, setup, architecture, and the three-act demo.
+
 The goals are:
 - Learn how to structure project workflows with Skills.
 - Provide practical demo implementations as inspiration and proof of value.
@@ -79,6 +82,7 @@ The key point: **Act 3 formalises a predictable developer response**. Schema mig
 
 ## More Detail
 
+- Workshop guide (setup, architecture, full demo): [`AUDIENCE_GUIDE.md`](AUDIENCE_GUIDE.md)
 - Product backlog and epic status: [`PRODUCT_BACKLOG.md`](PRODUCT_BACKLOG.md)
 - Agent architecture and runtime details: [`agentic_system/README.md`](agentic_system/README.md)
 - Act 3 developer tools and skill progression: [`dev_tools/README.md`](dev_tools/README.md)
