@@ -2,6 +2,9 @@
 
 This repository supports a workshop series about building reusable **Skills** for real projects.
 
+> **Workshop participants:** start here → [`AUDIENCE_GUIDE.md`](AUDIENCE_GUIDE.md)
+> Full step-by-step guide including requirements, setup, architecture, and the three-act demo.
+
 The goals are:
 - Learn how to structure project workflows with Skills.
 - Provide practical demo implementations as inspiration and proof of value.
@@ -41,9 +44,8 @@ make reset
 ```
 
 Notes:
-- If host port `5000` is busy, MLflow host port auto-falls back (`5002+`) during startup.
 - Default service ports:
-  ClickHouse `8123/9000`, ChromaDB `8000`, MLflow container `5000` (host may differ due to fallback).
+  ClickHouse `8123/9000`, ChromaDB `8000`, MLflow `5002`.
 
 ## Technologies
 
@@ -79,7 +81,18 @@ The key point: **Act 3 formalises a predictable developer response**. Schema mig
 
 ## More Detail
 
+- Workshop guide (setup, architecture, full demo): [`AUDIENCE_GUIDE.md`](AUDIENCE_GUIDE.md)
 - Product backlog and epic status: [`PRODUCT_BACKLOG.md`](PRODUCT_BACKLOG.md)
 - Agent architecture and runtime details: [`agentic_system/README.md`](agentic_system/README.md)
 - Act 3 developer tools and skill progression: [`dev_tools/README.md`](dev_tools/README.md)
 - Infrastructure and service-level details: [`db/README.md`](db/README.md)
+
+## Documentation (`docs/`)
+
+| Document | Purpose |
+|----------|---------|
+| [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) | Presenter guide — timing, commands, and talking points for all three acts |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | AgentAsTools data flow, file map, technology choices |
+| [`docs/DEV_TOOLS.md`](docs/DEV_TOOLS.md) | Skill progression guide (00_naive → 03_fully_guided) and schema_sync reference |
+| [`docs/SCHEMA_REFERENCE.md`](docs/SCHEMA_REFERENCE.md) | GitHub Archive field definitions, pre/post migration schema, ghost contributor query |
+| [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) | Common issues with infrastructure, TUI, migration, and tests |
