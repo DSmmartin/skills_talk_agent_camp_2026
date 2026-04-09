@@ -21,7 +21,3 @@ make seed
 make seed-vectors
 uv run python agentic_system/main.py
 ```
-
-## Notes
-
-- For extended materials and internal references, see `NOT_TO_READ_ASSISTANT/`.
