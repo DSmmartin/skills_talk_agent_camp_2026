@@ -23,7 +23,7 @@ The local infrastructure starts 3 services:
 - Docker Desktop (or Docker Engine) with Compose v2.
 - `make`.
 - Python 3.11+ (used by vector seed script).
-- Internet access (required by some demo seed scripts).
+- Internet access (required for `make seed`; not required for `make seed LOCAL=1`).
 
 ## Quick Start
 
@@ -31,7 +31,8 @@ From repository root:
 
 ```bash
 make up
-make seed
+make seed           # ~5M rows from GitHub Archive (requires internet)
+# make seed LOCAL=1 # offline fallback: 18 controlled rows, ghost-contributor pattern intact
 make seed-vectors
 ```
 
