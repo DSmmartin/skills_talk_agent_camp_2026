@@ -1,4 +1,4 @@
--- Local dummy seed for workshop offline fallback.
+-- Local dummy seed for offline fallback.
 -- 18 rows across 3 repos, pre-migration schema (merged UInt8).
 --
 -- Ghost contributors (merged=0 on every row): ghost-user-1, ghost-user-2, ghost-user-3, ghost-user-4

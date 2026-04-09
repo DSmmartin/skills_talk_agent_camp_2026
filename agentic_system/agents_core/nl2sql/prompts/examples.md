@@ -94,7 +94,7 @@ LIMIT 20;
 
 **Question:** What was the PR rejection rate per year?
 
-**Gotchas demonstrated:**
+**Gotchas to note:**
 - Aliases use `_count`/`_pct` suffixes — `AS merged` would clash with the `merged` column and cause error 184.
 - `sum(merged)` / `sum(1 - merged)` avoids nesting `countIf` inside `round()`, which also triggers error 184.
 - No `now()` or relative intervals — the dataset ends 2022-03-12, so `now()` returns 2026 and relative filters silently return 0 rows.
@@ -119,7 +119,7 @@ ORDER BY yr;
 
 **Question:** What is the monthly PR volume trend for the most recent year?
 
-**Gotcha demonstrated:** use the last full year in the dataset (`2021`) — never `now() - INTERVAL`.
+**Gotcha to note:** use the last full year in the dataset (`2021`) — never `now() - INTERVAL`.
 
 **SQL generated:**
 ```sql

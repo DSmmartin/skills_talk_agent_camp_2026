@@ -25,7 +25,7 @@ columns:
     description: >
       Pre-migration field. 1 if the pull request was merged, 0 if not.
       Use merged = 1 to filter merged PRs and merged = 0 for unmerged.
-      This field is the subject of the Act 2 schema migration
+      This field is the subject of the Phase 2 schema migration
       (renamed to merged_at DateTime NULL in the post-migration schema).
 
   - name: number

@@ -1,7 +1,7 @@
 """
 agentic_system/tui/app.py
 
-Textual TUI for the Ghost Contributors demo.
+Textual TUI for the Ghost Contributors app.
 
 Layout:
   ┌─────────────────────┬─────────────────────┐

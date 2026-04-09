@@ -4,7 +4,7 @@ dev_tools/scripts/yaml_patch.py
 
 Patches agentic_system/schema/<table>.yaml to match the live ClickHouse schema.
 
-Specifically handles the demo migration:
+Specifically handles the schema migration:
   - Removes the `merged` column entry (or updates its description)
   - Adds/updates the `merged_at` column entry
   - Updates the `schema_state` metadata

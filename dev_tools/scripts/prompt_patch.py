@@ -61,7 +61,7 @@ _REPLACEMENTS: list[tuple[str, str]] = [
     (r"`merged = 0`", "`merged_at IS NULL`"),
     # Description lines mentioning the old flag
     (
-        r"\*\*1\*\* if the PR was merged, \*\*0\*\* if closed without merging\. Subject of the demo migration\.",
+        r"\*\*1\*\* if the PR was merged, \*\*0\*\* if closed without merging\. Subject of the migration in this dataset\.",
         "**non-NULL** (timestamp) if the PR was merged, **NULL** if closed without merging. Post-migration field.",
     ),
     # "pre-migration state" label in schema comment

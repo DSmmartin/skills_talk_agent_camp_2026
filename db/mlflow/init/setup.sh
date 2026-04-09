@@ -3,7 +3,7 @@
 set -eu
 
 : "${MLFLOW_TRACKING_URI:=http://127.0.0.1:5002}"
-: "${MLFLOW_EXPERIMENT_NAME:=ghost-contributors-demo}"
+: "${MLFLOW_EXPERIMENT_NAME:=ghost-contributors}"
 : "${MLFLOW_DEFAULT_ARTIFACT_ROOT:=/mlflow/artifacts}"
 
 mkdir -p "${MLFLOW_DEFAULT_ARTIFACT_ROOT}"

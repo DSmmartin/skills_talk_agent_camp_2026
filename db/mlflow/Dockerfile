@@ -8,7 +8,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     MLFLOW_BACKEND_STORE_URI=sqlite:////mlflow/mlflow.db \
     MLFLOW_DEFAULT_ARTIFACT_ROOT=mlflow-artifacts:/ \
     MLFLOW_TRACKING_URI=http://127.0.0.1:5002 \
-    MLFLOW_EXPERIMENT_NAME=ghost-contributors-demo \
+    MLFLOW_EXPERIMENT_NAME=ghost-contributors \
     GIT_PYTHON_REFRESH=quiet
 
 WORKDIR /mlflow

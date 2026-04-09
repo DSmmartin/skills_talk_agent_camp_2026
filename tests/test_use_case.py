@@ -1,7 +1,7 @@
 """
 tests/test_use_case.py
 
-Act 1 acceptance tests — pre-migration schema state.
+Phase 1 acceptance tests — pre-migration schema state.
 
 Run with:
     pytest -m pre_migration

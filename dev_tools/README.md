@@ -1,17 +1,17 @@
-# dev_tools — Schema Sync Developer Tools (Act 3)
+# dev_tools — Schema Sync Developer Tools (Phase 3)
 
-This directory contains the Act 3 developer tools for the Ghost Contributors demo.
+This directory contains the Phase 3 developer tools for the Ghost Contributors scenario.
 
-After the Act 2 schema migration (`make migrate`) renames `merged → merged_at`,
+After the Phase 2 schema migration (`make migrate`) renames `merged → merged_at`,
 four layers of the agentic system break simultaneously. `schema_sync.py` patches
 all four in one command.
 
 ---
 
-## Facilitator Baseline (Fallback)
+## Baseline (Fallback)
 
-Use this path to verify the environment and tooling, or as a live-demo fallback.
-For the workshop flow, the primary goal is to create and iterate skills in `skill_examples/`.
+Use this path to verify the environment and tooling, or as a live fallback.
+For the primary flow, the goal is to create and iterate skills in `skill_examples/`.
 
 ```bash
 # After running 'make migrate' and seeing wrong answers:
@@ -141,7 +141,7 @@ Arguments:
 
 ---
 
-## Key message (Act 3)
+## Key message (Phase 3)
 
 Schema migrations are **predictable**. `schema_sync` formalises the response as a
 repeatable developer procedure. The next time a field is renamed, the fix is:

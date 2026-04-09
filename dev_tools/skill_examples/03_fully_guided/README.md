@@ -13,7 +13,7 @@ The complete procedure. Exact commands, validated tooling, full replacement list
 
 ## The key property
 
-Claude follows the skill reliably every time. No exploration, no guessing. If the migration matches the procedure (it does in this demo), it is resolved in one command.
+Claude follows the skill reliably every time. No exploration, no guessing. If the migration matches the procedure, it is resolved in one command.
 
 ## Balance point
 

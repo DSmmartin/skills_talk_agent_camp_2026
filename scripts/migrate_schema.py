@@ -2,10 +2,10 @@
 """
 scripts/migrate_schema.py
 
-Act 2 setup: rename merged (UInt8) → merged_at (Nullable(DateTime)) in ClickHouse.
+Schema migration helper: rename merged (UInt8) → merged_at (Nullable(DateTime)) in ClickHouse.
 Also marks migration-sensitive ChromaDB chunks as stale.
 Content in ChromaDB is intentionally left wrong — the agent will return silent
-wrong answers, demonstrating the need for schema-sync in Act 3.
+wrong answers until schema_sync repairs the affected layers.
 
 Usage:
     python scripts/migrate_schema.py
@@ -99,13 +99,13 @@ def run_ch(client, sql: str, dry_run: bool, label: str) -> None:
 # ── Main ───────────────────────────────────────────────────────────────────────
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Act 2 schema migration: merged → merged_at")
+    parser = argparse.ArgumentParser(description="Phase 2 schema migration: merged → merged_at")
     parser.add_argument("--dry-run", action="store_true", help="Print what would happen, touch nothing")
     args = parser.parse_args()
     dry_run: bool = args.dry_run
     tag = "[DRY RUN] " if dry_run else ""
 
-    print(f"{tag}==> Act 2 Schema Migration")
+    print(f"{tag}==> Phase 2 Schema Migration")
     print(f"    ClickHouse  {settings.clickhouse_host}:{settings.clickhouse_port}/{settings.clickhouse_database}")
     print(f"    ChromaDB    {CHROMA_BASE_URL}")
     print()
@@ -141,7 +141,7 @@ def main() -> int:
     )
     # Zero out merged instead of dropping it.
     # Dropping would cause ClickHouse to throw UNKNOWN_IDENTIFIER when old SQL runs.
-    # Zeroing makes merged = 1 execute silently and return 0 rows — the intended Act 2 effect.
+    # Zeroing makes merged = 1 execute silently and return 0 rows — the intended Phase 2 effect.
     run_ch(
         client,
         (
@@ -204,7 +204,7 @@ def main() -> int:
     # ── Summary ────────────────────────────────────────────────────────────
     print(f"{tag}Migration complete.")
     if not dry_run:
-        print("  Act 2 is now active:")
+        print("  Phase 2 is now active:")
         print("    • ClickHouse: merged_at Nullable(DateTime)  (merged column gone)")
         print("    • ChromaDB:   stale chunks with old field names still in RAG")
         print("    • Agent will return 0 rows silently — no exception thrown.")

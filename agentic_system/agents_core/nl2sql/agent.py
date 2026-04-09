@@ -19,7 +19,7 @@ if settings.local_seed:
 
 ## LOCAL SEED OVERRIDE (active — local_seed=True)
 
-The dataset currently loaded is the **18-row workshop fixture**, not the 5M-row GitHub Archive sample.
+The dataset currently loaded is the **18-row local fixture**, not the 5M-row GitHub Archive sample.
 Disregard the dataset facts section above entirely. Use the following instead:
 
 - **Total rows:** 18

@@ -3,7 +3,8 @@
 ## Ghost Contributors: Building Resilient Agentic Systems with Skills
 
 **Workshop format:** Live demo + hands-on  
-**Repository:** `skills-talk-agent-camp-2026`
+**Repository:** `skills-talk-agent-camp-2026`  
+**Recommended branch for audience-facing materials:** `workshop-mode`
 
 ---
 
@@ -65,6 +66,7 @@ The following tools must be installed on your machine before the workshop:
 ```bash
 git clone https://github.com/DSmmartin/skills_talk_agent_camp_2026.git
 cd skills_talk_agent_camp_2026
+git checkout workshop-mode
 ```
 
 Install Python dependencies:
@@ -107,7 +109,7 @@ All other values have working defaults and can be left as-is for local developme
 | `CLICKHOUSE_HOST` | `localhost` | ClickHouse HTTP host |
 | `CLICKHOUSE_PORT` | `8123` | ClickHouse HTTP port |
 | `MLFLOW_TRACKING_URI` | `http://localhost:5002` | MLflow tracking server |
-| `MLFLOW_EXPERIMENT_NAME` | `ghost-contributors-demo` | MLflow experiment name |
+| `MLFLOW_EXPERIMENT_NAME` | `ghost-contributors` | MLflow experiment name |
 
 ---
 

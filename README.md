@@ -1,20 +1,19 @@
 # Skills Talk AgentCamp 2026
 
-This repository supports a workshop series about building reusable **Skills** for real projects.
+This repository supports building reusable **Skills** for real projects.
 
-> **Workshop participants:** start here → [`AUDIENCE_GUIDE.md`](AUDIENCE_GUIDE.md)
-> Full step-by-step guide including requirements, setup, architecture, and the three-act demo.
+> Extended guide and materials: [`NOT_TO_READ_ASSISTANT/AUDIENCE_GUIDE.md`](NOT_TO_READ_ASSISTANT/AUDIENCE_GUIDE.md)
 
 The goals are:
 - Learn how to structure project workflows with Skills.
-- Provide practical demo implementations as inspiration and proof of value.
-- Reuse the same infrastructure baseline across multiple demos (current and future).
+- Provide practical implementations as inspiration and proof of value.
+- Reuse the same infrastructure baseline across multiple scenarios over time.
 
 ## Infrastructure (Current Baseline)
 
 The local infrastructure starts 3 services:
 
-- **ClickHouse**: analytics SQL backend for demo datasets.
+- **ClickHouse**: analytics SQL backend for datasets.
 - **ChromaDB**: vector store for retrieval use cases.
 - **MLflow**: tracking server for runs and observability.
 
@@ -57,11 +56,11 @@ Notes:
 - Python
 - Makefile-based task runner
 
-## Demos
+## Reference Scenario
 
-This repo is designed to host multiple demos over time.
+This repo is designed to host multiple scenarios over time.
 
-### Demo 01 — Ghost Contributors
+### Scenario 01 — Ghost Contributors
 
 > *"Show me repositories where users opened PRs but never got one merged — the ghost contributors"*
 
@@ -69,31 +68,31 @@ An agentic NL2SQL system that answers natural language questions about GitHub co
 
 Current status (2026-04-08): **Epics 1–5 complete** (Infrastructure, Agentic System, Migration Scripts, Developer Tools, Tests).
 
-| Act | What happens | Primary command |
+| Phase | What happens | Primary command |
 |-----|-------------|-----------------|
-| **Act 1 — It works** | Agent answers the ghost contributor question correctly via `AgentRAG` + `AgentNL2SQL`. | `uv run python agentic_system/main.py` |
-| **Act 2 — It breaks** | A schema migration introduces `merged_at Nullable(DateTime)` and legacy `merged = 1` logic starts returning 0 rows silently across four layers. | `make migrate` |
-| **Act 3 — It heals** | `schema_sync` patches YAML contract, ChromaDB chunks, NL2SQL prompt, and RAG prompt in one procedure. Skill progression examples live in `dev_tools/skill_examples/`. | `make schema-sync` |
+| **Phase 1 — Baseline** | Agent answers the ghost contributor question correctly via `AgentRAG` + `AgentNL2SQL`. | `uv run python agentic_system/main.py` |
+| **Phase 2 — Migration Break** | A schema migration introduces `merged_at Nullable(DateTime)` and legacy `merged = 1` logic starts returning 0 rows silently across four layers. | `make migrate` |
+| **Phase 3 — Recovery** | `schema_sync` patches YAML contract, ChromaDB chunks, NL2SQL prompt, and RAG prompt in one procedure. Skill progression examples live in `dev_tools/skill_examples/`. | `make schema-sync` |
 
-The key point: **Act 3 formalises a predictable developer response**. Schema migrations are expected events, and `schema_sync` makes the repair path repeatable.
+The key point: **Phase 3 formalises a predictable developer response**. Schema migrations are expected events, and `schema_sync` makes the repair path repeatable.
 
 **Stack:** OpenAI Agents SDK · ClickHouse · ChromaDB · MLflow · Textual TUI · Python 3.14
 
 
 ## More Detail
 
-- Workshop guide (setup, architecture, full demo): [`AUDIENCE_GUIDE.md`](AUDIENCE_GUIDE.md)
-- Product backlog and epic status: [`PRODUCT_BACKLOG.md`](PRODUCT_BACKLOG.md)
+- Extended guide (setup, architecture, full walkthrough): [`NOT_TO_READ_ASSISTANT/AUDIENCE_GUIDE.md`](NOT_TO_READ_ASSISTANT/AUDIENCE_GUIDE.md)
+- Product backlog and epic status: [`NOT_TO_READ_ASSISTANT/PRODUCT_BACKLOG.md`](NOT_TO_READ_ASSISTANT/PRODUCT_BACKLOG.md)
 - Agent architecture and runtime details: [`agentic_system/README.md`](agentic_system/README.md)
-- Act 3 developer tools and skill progression: [`dev_tools/README.md`](dev_tools/README.md)
+- Developer tools and skill progression: [`dev_tools/README.md`](dev_tools/README.md)
 - Infrastructure and service-level details: [`db/README.md`](db/README.md)
 
-## Documentation (`docs/`)
+## Documentation (`NOT_TO_READ_ASSISTANT/docs/`)
 
 | Document | Purpose |
 |----------|---------|
-| [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) | Presenter guide — timing, commands, and talking points for all three acts |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | AgentAsTools data flow, file map, technology choices |
-| [`docs/DEV_TOOLS.md`](docs/DEV_TOOLS.md) | Skill progression guide (00_naive → 03_fully_guided) and schema_sync reference |
-| [`docs/SCHEMA_REFERENCE.md`](docs/SCHEMA_REFERENCE.md) | GitHub Archive field definitions, pre/post migration schema, ghost contributor query |
-| [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) | Common issues with infrastructure, TUI, migration, and tests |
+| [`NOT_TO_READ_ASSISTANT/docs/PRESENTER_GUIDE.md`](NOT_TO_READ_ASSISTANT/docs/PRESENTER_GUIDE.md) | Presenter guide — timing, commands, and talking points for all three phases |
+| [`NOT_TO_READ_ASSISTANT/docs/ARCHITECTURE.md`](NOT_TO_READ_ASSISTANT/docs/ARCHITECTURE.md) | AgentAsTools data flow, file map, technology choices |
+| [`NOT_TO_READ_ASSISTANT/docs/DEV_TOOLS.md`](NOT_TO_READ_ASSISTANT/docs/DEV_TOOLS.md) | Skill progression guide (00_naive → 03_fully_guided) and schema_sync reference |
+| [`NOT_TO_READ_ASSISTANT/docs/SCHEMA_REFERENCE.md`](NOT_TO_READ_ASSISTANT/docs/SCHEMA_REFERENCE.md) | GitHub Archive field definitions, pre/post migration schema, ghost contributor query |
+| [`NOT_TO_READ_ASSISTANT/docs/TROUBLESHOOTING.md`](NOT_TO_READ_ASSISTANT/docs/TROUBLESHOOTING.md) | Common issues with infrastructure, TUI, migration, and tests |

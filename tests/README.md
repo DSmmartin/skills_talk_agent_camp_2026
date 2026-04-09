@@ -1,12 +1,12 @@
 # Tests Guide
 
-This folder contains the Epic 5 test suite for the Ghost Contributors demo.
+This folder contains the Epic 5 test suite for the Ghost Contributors scenario.
 
 ## Goals
 
-- Protect the **pre-migration baseline** (Act 1).
-- Verify the **silent failure** after migration (Act 2).
-- Verify **schema-sync recovery** (Act 3).
+- Protect the **pre-migration baseline** (Phase 1).
+- Verify the **silent failure** after migration (Phase 2).
+- Verify **schema-sync recovery** (Phase 3).
 - Provide a mocked complete flow for fast regression checks.
 
 ## Markers
@@ -20,13 +20,13 @@ This folder contains the Epic 5 test suite for the Ghost Contributors demo.
 ## Recommended Commands
 
 ```bash
-# Baseline (Act 1)
+# Baseline (Phase 1)
 uv run pytest -m pre_migration --tb=short -q
 
-# Broken state checks (Act 2)
+# Broken state checks (Phase 2)
 uv run pytest -m post_migration --tb=short -q
 
-# Recovery checks (Act 3)
+# Recovery checks (Phase 3)
 uv run pytest -m schema_sync --tb=short -q
 
 # Mocked full lifecycle for kubernetes question
@@ -36,7 +36,7 @@ make test-complete-flow
 uv run pytest -m "pre_migration or post_migration or schema_sync or complete_flow" --tb=short -q
 ```
 
-## Live Demo Verification Sequence
+## Live Verification Sequence
 
 Use this when you want the real migrate/sync sequence on local infra:
 
@@ -64,7 +64,7 @@ uv run pytest tests/test_schema_upgrade_gate.py -q
 
 Important:
 - It is expected to fail on normalized pre-migration repo state.
-- Keep it as a separate profile until documentation/audience flow is finalized.
+- Keep it as a separate profile until documentation flow is finalized.
 
 ## Notes
 

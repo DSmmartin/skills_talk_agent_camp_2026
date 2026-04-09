@@ -4,7 +4,7 @@ Detailed field mapping and patch instructions for each layer of the Ghost Contri
 
 ---
 
-## The demo migration
+## The schema migration
 
 | Before | After | Impact |
 |--------|-------|--------|

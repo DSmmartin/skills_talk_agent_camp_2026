@@ -10,7 +10,7 @@ services:
     volumes:
       - clickhouse_data:/var/lib/clickhouse
       - ./db/clickhouse/init/01_create_table.sql:/docker-entrypoint-initdb.d/01_create_table.sql:ro
-      - ./db/clickhouse/init/02_seed_data.sh:/opt/demo/init/02_seed_data.sh:ro
+      - ./db/clickhouse/init/02_seed_data.sh:/opt/bootstrap/init/02_seed_data.sh:ro
       - ./db/clickhouse/config:/etc/clickhouse-server/config.d:ro
 
   chromadb:

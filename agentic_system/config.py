@@ -35,11 +35,11 @@ class Settings(BaseSettings):
 
     # ── MLflow ───────────────────────────────────────────────────────────────
     mlflow_tracking_uri: str = "http://localhost:5000"
-    mlflow_experiment_name: str = "ghost-contributors-demo"
+    mlflow_experiment_name: str = "ghost-contributors"
 
-    # ── Demo mode ────────────────────────────────────────────────────────────
+    # ── Local seed mode ─────────────────────────────────────────────────────
     # Set to True when using `make seed LOCAL=1` (18-row controlled dataset).
-    # Switches the default demo question and TUI hints to the local repo names.
+    # Switches the default question and TUI hints to the local repo names.
     local_seed: bool = False
 
     # ── Logging ──────────────────────────────────────────────────────────────

@@ -24,11 +24,11 @@ help:
 	@printf '%s\n' '  make seed           Seed ClickHouse with ~5M GitHub Archive PR events'
 	@printf '%s\n' '  make seed LOCAL=1   Seed ClickHouse with local 18-row controlled dataset (offline)'
 	@printf '%s\n' '  make seed-vectors   Seed ChromaDB collections'
-	@printf '%s\n' '  make migrate        Act 2: rename merged → merged_at (silent failure)'
+	@printf '%s\n' '  make migrate        Phase 2: rename merged → merged_at (silent failure)'
 	@printf '%s\n' '  make rollback       Restore pre-migration schema + ChromaDB state'
 	@printf '%s\n' '  make validate-schema Diff live ClickHouse schema vs YAML contract'
-	@printf '%s\n' '  make schema-sync    Act 3: patch all layers after migration'
-	@printf '%s\n' '  make schema-sync-dry Act 3: dry-run schema-sync (show changes only)'
+	@printf '%s\n' '  make schema-sync    Phase 3: patch all layers after migration'
+	@printf '%s\n' '  make schema-sync-dry Phase 3: dry-run schema-sync (show changes only)'
 	@printf '%s\n' '  make test-complete-flow Run mocked stateful flow test (pre->migrate->sync)'
 	@printf '%s\n' '  make verify-complete-flow Run live sequential verification and auto-rollback'
 	@printf '%s\n' '  make reset          Recreate infra from scratch (clears volumes)'
@@ -45,7 +45,7 @@ ifeq ($(LOCAL),1)
 	$(COMPOSE_CMD) cp db/clickhouse/init/03_seed_local.sql clickhouse:/tmp/03_seed_local.sql
 	$(COMPOSE_CMD) exec -T clickhouse sh -c 'clickhouse-client --multiquery < /tmp/03_seed_local.sql'
 else
-	$(COMPOSE_CMD) exec -T clickhouse sh -lc 'GITHUB_ARCHIVE_TARGET_ROWS=$(GITHUB_ARCHIVE_TARGET_ROWS) GITHUB_ARCHIVE_SOURCE_SUFFIXES="$(GITHUB_ARCHIVE_SOURCE_SUFFIXES)" /opt/demo/init/02_seed_data.sh'
+	$(COMPOSE_CMD) exec -T clickhouse sh -lc 'GITHUB_ARCHIVE_TARGET_ROWS=$(GITHUB_ARCHIVE_TARGET_ROWS) GITHUB_ARCHIVE_SOURCE_SUFFIXES="$(GITHUB_ARCHIVE_SOURCE_SUFFIXES)" /opt/bootstrap/init/02_seed_data.sh'
 endif
 
 seed-vectors:

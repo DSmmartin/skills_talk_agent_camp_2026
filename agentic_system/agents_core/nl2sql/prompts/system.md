@@ -16,7 +16,7 @@ The primary table is `github_events` in ClickHouse. Schema (pre-migration state)
 | actor_login  | String                    | GitHub username of the actor who triggered the event. |
 | repo_name    | String                    | Full repository name, e.g. `'kubernetes/kubernetes'`. |
 | created_at   | DateTime                  | Timestamp of the event. |
-| merged       | UInt8                     | **1** if the PR was merged, **0** if closed without merging. Subject of the demo migration. |
+| merged       | UInt8                     | **1** if the PR was merged, **0** if closed without merging. Subject of the migration in this dataset. |
 | number       | UInt32                    | PR number within the repository. |
 | title        | String                    | PR title text. |
 

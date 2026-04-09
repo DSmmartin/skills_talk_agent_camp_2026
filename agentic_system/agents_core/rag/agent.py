@@ -19,7 +19,7 @@ if settings.local_seed:
 
 ## LOCAL SEED OVERRIDE (active — local_seed=True)
 
-The current dataset is the **18-row workshop fixture**. Only three repositories exist:
+The current dataset is the **18-row local fixture**. Only three repositories exist:
 `org/repo-alpha`, `org/repo-beta`, and `org/repo-gamma`.
 
 When retrieving schema context, always note:

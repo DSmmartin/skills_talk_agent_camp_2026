@@ -2,7 +2,7 @@
 """
 dev_tools/schema_sync.py
 
-Act 3 developer tool — fully automated schema-sync procedure.
+Phase 3 developer tool — fully automated schema-sync procedure.
 
 Detects drift between the live ClickHouse schema and every layer of the agentic
 system (YAML contract, ChromaDB RAG chunks, NL2SQL + RAG prompts), then patches

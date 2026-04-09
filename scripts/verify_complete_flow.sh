@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Live sequential verification for workshop flow.
+# Live sequential verification for the full lifecycle.
 # Runs the exact lifecycle and restores schema at the end.
 
 MIGRATED=0

@@ -135,7 +135,7 @@ agentic_system/
 ├── setup.py                                   setup_openai() — call once at process start
 ├── orchestrator.py                            GithubDataOrchestrator agent definition
 ├── memory.py                                  ConversationMemory — session turn history
-├── demo.py                                    DEMO_QUESTION + run_query() helper (CLI)
+├── scenario.py                                DEFAULT_QUESTION + run_query() helper (CLI)
 │
 ├── agents_core/
 │   ├── rag/
@@ -189,11 +189,11 @@ python agentic_system/main.py
 ```python
 import asyncio
 from agentic_system.setup import setup_openai
-from agentic_system.demo import run_query, DEMO_QUESTION
+from agentic_system.scenario import run_query, DEFAULT_QUESTION
 
 setup_openai()  # must be called before any agent module is imported
 
-result = asyncio.run(run_query(DEMO_QUESTION))
+result = asyncio.run(run_query(DEFAULT_QUESTION))
 print(result.final_output)
 ```
 
@@ -228,13 +228,13 @@ All settings are loaded from `.env` via `pydantic-settings`. Copy `.env.example`
 | `CLICKHOUSE_PASSWORD` | _(empty)_ | ClickHouse password |
 | `CLICKHOUSE_DATABASE` | `default` | ClickHouse database |
 | `MLFLOW_TRACKING_URI` | `http://localhost:5002` | MLflow tracking server |
-| `MLFLOW_EXPERIMENT_NAME` | `ghost-contributors-demo` | MLflow experiment |
+| `MLFLOW_EXPERIMENT_NAME` | `ghost-contributors` | MLflow experiment |
 
 ---
 
 ## Observability
 
-- **MLflow** — `mlflow.openai.autolog()` captures every LLM call automatically as a nested trace (orchestrator → AgentRAG → AgentNL2SQL). View at `http://localhost:5002` under the `ghost-contributors-demo` experiment.
+- **MLflow** — `mlflow.openai.autolog()` captures every LLM call automatically as a nested trace (orchestrator → AgentRAG → AgentNL2SQL). View at `http://localhost:5002` under the `ghost-contributors` experiment.
 - **loguru** — file-only sink at `logs/session_<time>.log`. No stdout output so the Textual TUI owns the terminal cleanly. One file per process launch.
 - Built-in agents SDK tracing is disabled via `set_tracing_disabled(True)` — MLflow is the single active tracing layer.
 
@@ -242,7 +242,7 @@ All settings are loaded from `.env` via `pydantic-settings`. Copy `.env.example`
 
 ## Schema-sync patch targets
 
-Four files are written with **pre-migration field names** (`merged UInt8`). They are the patch targets for `dev_tools/schema_sync.py` in Act 3 of the demo:
+Four files are written with **pre-migration field names** (`merged UInt8`). They are the patch targets for `dev_tools/schema_sync.py` in Phase 3:
 
 | File | What gets patched |
 |------|-------------------|
@@ -258,7 +258,7 @@ The machine-readable contract is `schema/github_events.yaml`. After `schema_sync
 ## Tests
 
 ```bash
-# Run Act 1 acceptance tests (no live services needed — mocks ClickHouse + ChromaDB)
+# Run Phase 1 acceptance tests (no live services needed — mocks ClickHouse + ChromaDB)
 pytest -m pre_migration
 ```
 

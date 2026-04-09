@@ -1,7 +1,7 @@
 """
 agentic_system/main.py
 
-Entry point for the Ghost Contributors demo.
+Entry point for the Ghost Contributors app.
 
 Import order is deliberate:
   1. observability.logger  — removes stdout before any agent code runs

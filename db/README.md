@@ -1,6 +1,6 @@
 # Infrastructure Details (`/db`)
 
-This folder contains the container build/runtime assets for the three local infrastructure services used by the demo.
+This folder contains the container build/runtime assets for the three local infrastructure services used by the scenario.
 
 ## Service Overview
 
@@ -43,7 +43,7 @@ Key files:
 How it is used:
 - Runs MLflow tracking server on container port `5002`.
 - Uses SQLite backend and artifacts under `/mlflow`.
-- Experiment `ghost-contributors-demo` is created on startup if missing.
+- Experiment `ghost-contributors` is created on startup if missing.
 
 ## Runtime Wiring
 
@@ -66,4 +66,4 @@ make down
 
 - Keep service responsibilities clear and decoupled.
 - Keep data seeding explicit and repeatable.
-- Keep local workshop startup simple while preserving production-like boundaries.
+- Keep local startup simple while preserving production-like boundaries.

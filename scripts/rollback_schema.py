@@ -2,7 +2,7 @@
 """
 scripts/rollback_schema.py
 
-Reverses the Act 2 migration: merged_at (Nullable(DateTime)) → merged (UInt8).
+Reverses the Phase 2 migration: merged_at (Nullable(DateTime)) → merged (UInt8).
 Restores ChromaDB chunk metadata to pre_migration state.
 
 Usage:
@@ -97,13 +97,13 @@ def run_ch(client, sql: str, dry_run: bool, label: str) -> None:
 # ── Main ───────────────────────────────────────────────────────────────────────
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Rollback Act 2 migration: merged_at → merged")
+    parser = argparse.ArgumentParser(description="Rollback Phase 2 migration: merged_at → merged")
     parser.add_argument("--dry-run", action="store_true", help="Print what would happen, touch nothing")
     args = parser.parse_args()
     dry_run: bool = args.dry_run
     tag = "[DRY RUN] " if dry_run else ""
 
-    print(f"{tag}==> Act 2 Schema Rollback")
+    print(f"{tag}==> Phase 2 Schema Rollback")
     print(f"    ClickHouse  {settings.clickhouse_host}:{settings.clickhouse_port}/{settings.clickhouse_database}")
     print(f"    ChromaDB    {CHROMA_BASE_URL}")
     print()

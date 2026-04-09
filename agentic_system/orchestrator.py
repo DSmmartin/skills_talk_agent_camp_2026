@@ -3,8 +3,8 @@ agent/orchestrator.py
 
 Generic GitHub Archive query orchestrator using the AgentAsTools pattern.
 The agent answers any question about GitHub contributor behaviour — it is not
-scoped to ghost contributors. The demo question is defined separately in
-agent/demo.py so this module stays reusable.
+scoped to ghost contributors. The default question is defined separately in
+agentic_system/scenario.py so this module stays reusable.
 """
 
 from agents import Agent

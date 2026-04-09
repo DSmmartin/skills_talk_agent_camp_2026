@@ -24,9 +24,9 @@ dev = [
 
 [tool.pytest.ini_options]
 markers = [
-    "pre_migration: Act 1 tests — pre-migration schema (merged UInt8)",
-    "post_migration: Act 2 tests — post-migration schema (merged_at DateTime NULL)",
-    "schema_sync: Act 3 tests — schema-sync outcome and patch utility contract",
+    "pre_migration: Phase 1 tests — pre-migration schema (merged UInt8)",
+    "post_migration: Phase 2 tests — post-migration schema (merged_at DateTime NULL)",
+    "schema_sync: Phase 3 tests — schema-sync outcome and patch utility contract",
     "complete_flow: Stateful mocked flow: pre -> migrate -> schema_sync -> fixed",
     "schema_upgrade_gate: Fails unless repository files are upgraded to post-migration schema",
 ]
