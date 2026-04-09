@@ -228,7 +228,7 @@ The key field driving this query is `merged` — a `UInt8` column where `1` mean
 
 ### Act 1 — It Works
 
-Launch the TUI and ask the ghost contributor question:
+Launch the TUI (set `PYTHONPATH` first ) and ask the ghost contributor question:
 
 ```bash
 export PYTHONPATH=/your/project/folder/skills_talk_agent_camp_2026

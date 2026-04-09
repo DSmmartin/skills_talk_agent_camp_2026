@@ -86,3 +86,13 @@ The key point: **Act 3 formalises a predictable developer response**. Schema mig
 - Agent architecture and runtime details: [`agentic_system/README.md`](agentic_system/README.md)
 - Act 3 developer tools and skill progression: [`dev_tools/README.md`](dev_tools/README.md)
 - Infrastructure and service-level details: [`db/README.md`](db/README.md)
+
+## Documentation (`docs/`)
+
+| Document | Purpose |
+|----------|---------|
+| [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) | Presenter guide — timing, commands, and talking points for all three acts |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | AgentAsTools data flow, file map, technology choices |
+| [`docs/DEV_TOOLS.md`](docs/DEV_TOOLS.md) | Skill progression guide (00_naive → 03_fully_guided) and schema_sync reference |
+| [`docs/SCHEMA_REFERENCE.md`](docs/SCHEMA_REFERENCE.md) | GitHub Archive field definitions, pre/post migration schema, ghost contributor query |
+| [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) | Common issues with infrastructure, TUI, migration, and tests |
