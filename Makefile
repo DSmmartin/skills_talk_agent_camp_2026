@@ -11,6 +11,7 @@ CHROMA_HOST_PORT ?= 8000
 CHROMA_BASE_URL ?= http://127.0.0.1:$(CHROMA_HOST_PORT)
 GITHUB_ARCHIVE_TARGET_ROWS ?= 5000000
 GITHUB_ARCHIVE_SOURCE_SUFFIXES ?= aa ab ac ad ae af ag
+LOCAL ?= 0
 
 COMPOSE_CMD := docker compose -p $(PROJECT_NAME) -f docker-compose.yml
 
@@ -20,7 +21,8 @@ help:
 	@printf '%s\n' 'Available targets:'
 	@printf '%s\n' '  make up             Start infra stack (ClickHouse, ChromaDB, MLflow)'
 	@printf '%s\n' '  make down           Stop infra stack'
-	@printf '%s\n' '  make seed           Seed ClickHouse sample PR dataset'
+	@printf '%s\n' '  make seed           Seed ClickHouse with ~5M GitHub Archive PR events'
+	@printf '%s\n' '  make seed LOCAL=1   Seed ClickHouse with local 18-row controlled dataset (offline)'
 	@printf '%s\n' '  make seed-vectors   Seed ChromaDB collections'
 	@printf '%s\n' '  make migrate        Act 2: rename merged → merged_at (silent failure)'
 	@printf '%s\n' '  make rollback       Restore pre-migration schema + ChromaDB state'
@@ -39,7 +41,12 @@ down:
 	$(COMPOSE_CMD) down
 
 seed:
+ifeq ($(LOCAL),1)
+	$(COMPOSE_CMD) cp db/clickhouse/init/03_seed_local.sql clickhouse:/tmp/03_seed_local.sql
+	$(COMPOSE_CMD) exec -T clickhouse sh -c 'clickhouse-client --multiquery < /tmp/03_seed_local.sql'
+else
 	$(COMPOSE_CMD) exec -T clickhouse sh -lc 'GITHUB_ARCHIVE_TARGET_ROWS=$(GITHUB_ARCHIVE_TARGET_ROWS) GITHUB_ARCHIVE_SOURCE_SUFFIXES="$(GITHUB_ARCHIVE_SOURCE_SUFFIXES)" /opt/demo/init/02_seed_data.sh'
+endif
 
 seed-vectors:
 	python3 db/vectordb/init/seed_vectors.py --base-url "$(CHROMA_BASE_URL)"

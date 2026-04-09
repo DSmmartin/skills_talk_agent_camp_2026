@@ -128,6 +128,59 @@ make seed-vectors
 
 **Seeding takes a few minutes** on first run — ClickHouse downloads and ingests a ~5M-row GitHub Archive sample.
 
+> **No internet access? Use the local seed instead.**
+>
+> If you are in a workshop environment without reliable internet, or if the GitHub Archive S3 source is slow, use the built-in offline fallback:
+>
+> ```bash
+> make seed LOCAL=1
+> ```
+>
+> This loads 18 hand-crafted rows across three repositories that are specifically designed to reproduce the ghost-contributor pattern. Acts 2 and 3 work identically with this dataset.
+>
+> Also set `LOCAL_SEED=true` in your `.env` file so the TUI and `python -m agentic_system.demo` automatically use the matching demo question and hint text:
+>
+> ```bash
+> # .env
+> LOCAL_SEED=true
+> ```
+>
+> **Expected results with the local dataset (pre-migration)**
+>
+> Dataset overview — 18 rows total:
+>
+> | repo | total events | PRs opened | PRs merged | PRs rejected |
+> |------|-------------|-----------|-----------|-------------|
+> | `org/repo-alpha` | 7 | 3 | 2 | 2 |
+> | `org/repo-beta` | 6 | 2 | 2 | 2 |
+> | `org/repo-gamma` | 5 | 2 | 2 | 1 |
+>
+> All contributors:
+>
+> | actor | repo | PRs opened | PRs merged | ghost? |
+> |-------|------|-----------|-----------|--------|
+> | `alice` | `org/repo-alpha` | 1 | 1 | no |
+> | `bob` | `org/repo-alpha` | 0 | 1 | no |
+> | `ghost-user-1` | `org/repo-alpha` | 2 | 0 | **yes** |
+> | `carol` | `org/repo-beta` | 0 | 2 | no |
+> | `ghost-user-2` | `org/repo-beta` | 1 | 0 | **yes** |
+> | `ghost-user-3` | `org/repo-beta` | 1 | 0 | **yes** |
+> | `dave` | `org/repo-gamma` | 0 | 2 | no |
+> | `ghost-user-4` | `org/repo-gamma` | 2 | 0 | **yes** |
+>
+> Ghost contributor query — **Act 1 expected output** (4 rows):
+>
+> | actor | repo | prs_opened | prs_merged |
+> |-------|------|-----------|-----------|
+> | `ghost-user-1` | `org/repo-alpha` | 2 | 0 |
+> | `ghost-user-2` | `org/repo-beta` | 1 | 0 |
+> | `ghost-user-3` | `org/repo-beta` | 1 | 0 |
+> | `ghost-user-4` | `org/repo-gamma` | 2 | 0 |
+>
+> **Act 2 expected output** (after `make migrate`): **0 rows** — the agent generates `merged = 1` but the column is now zeroed out. No exception, no warning. This is the silent failure.
+>
+> **Act 3 expected output** (after `make schema-sync`): same 4 rows as Act 1, now using `merged_at IS NOT NULL` in the SQL.
+
 Verify services are up:
 
 | Service | URL |
@@ -401,6 +454,38 @@ CI runs the full suite on every push via GitHub Actions (`.github/workflows/`).
 
 ---
 
+### Special test: `schema_upgrade_gate`
+
+`tests/test_schema_upgrade_gate.py` is a strict post-migration readiness gate. It checks that every layer of the repository — the YAML schema contract, the NL2SQL prompt, the RAG prompt, and the agent tool description — has been fully updated to use `merged_at` instead of `merged`.
+
+**This test is designed to fail in the pre-migration state.** Running it before Act 3 is a way to confirm that the system is genuinely broken across all four layers.
+
+```bash
+uv run pytest tests/test_schema_upgrade_gate.py -q
+```
+
+Expected output **before `make schema-sync`** (Act 2 state — 5 failures):
+
+```
+FAILED tests/test_schema_upgrade_gate.py::test_repo_code_is_upgraded_for_post_migration_schema
+Post-migration code upgrade gate failed:
+- Schema contract missing `merged_at` column.
+- Schema contract still documents legacy predicate `merged = 1`.
+- NL2SQL prompt still contains `merged = 1`.
+- RAG prompt missing `merged_at` reference.
+- Agent tool description still advertises `merged = 1`.
+```
+
+Expected output **after `make schema-sync`** (Act 3 — all pass):
+
+```
+1 passed
+```
+
+This gate is intentionally excluded from the standard CI suite (`pre_migration or post_migration or schema_sync or complete_flow`). It lives as a separate profile because it is only meaningful to run at the Act 2 → Act 3 transition — not as a regression check on the pre-migration baseline.
+
+---
+
 ## 11. Observability
 
 ### MLflow
@@ -456,7 +541,8 @@ make clean-complete
 |---------|-------------|
 | `make up` | Start ClickHouse, ChromaDB, and MLflow |
 | `make down` | Stop all services |
-| `make seed` | Seed ClickHouse with ~5M GitHub Archive PR events |
+| `make seed` | Seed ClickHouse with ~5M GitHub Archive PR events (requires internet) |
+| `make seed LOCAL=1` | Seed ClickHouse with 18-row local dataset — ghost-contributor pattern, no internet needed |
 | `make seed-vectors` | Seed ChromaDB collections |
 | `make logs` | Tail service logs |
 | `make reset` | Recreate infrastructure from scratch (clears volumes) |
@@ -492,6 +578,7 @@ uv run python dev_tools/schema_sync.py --table github_events --rollback
 | `uv run pytest -m complete_flow` | Full stateful lifecycle test |
 | `make test-complete-flow` | Shortcut for the mocked stateful flow test |
 | `make verify-complete-flow` | Live sequential verification with auto-rollback |
+| `uv run pytest tests/test_schema_upgrade_gate.py -q` | Post-migration readiness gate — fails in Act 2, passes after Act 3 |
 
 ---
 

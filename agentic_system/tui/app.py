@@ -140,8 +140,13 @@ class GhostContributorsApp(App):
                 )
         with Horizontal(id="input-bar"):
             yield Label(">", id="prompt-label")
-            yield Input(
-                placeholder="Ask about GitHub contributors…",
+            placeholder = (
+            "Ask about org/repo-alpha, org/repo-beta, org/repo-gamma…"
+            if settings.local_seed
+            else "Ask about GitHub contributors…"
+        )
+        yield Input(
+                placeholder=placeholder,
                 id="question-input",
             )
         yield Footer()
@@ -155,11 +160,18 @@ class GhostContributorsApp(App):
         self._last_run_url: Optional[str] = None
         self.query_one("#question-input", Input).focus()
         chat = self.query_one("#chat-log", RichLog)
-        chat.write(
-            "[dim]Ask a question about GitHub contributor behaviour.\n"
-            "Follow-up questions remember the full conversation context.\n"
-            "Example: Show me repositories where users opened PRs but never got one merged.[/dim]"
-        )
+        if settings.local_seed:
+            chat.write(
+                "[dim]Running with local seed dataset (18 rows, 3 repos).\n"
+                "Follow-up questions remember the full conversation context.\n"
+                "Example: Show me ghost contributors on org/repo-alpha, org/repo-beta, and org/repo-gamma.[/dim]"
+            )
+        else:
+            chat.write(
+                "[dim]Ask a question about GitHub contributor behaviour.\n"
+                "Follow-up questions remember the full conversation context.\n"
+                "Example: Show me repositories where users opened PRs but never got one merged.[/dim]"
+            )
         self._prime_mlflow_panel()
 
     def _prime_mlflow_panel(self) -> None:

@@ -15,12 +15,20 @@ import json
 from agents import Runner, RunResult, ToolCallItem, ToolCallOutputItem
 from loguru import logger
 
+from agentic_system.config import settings
 from agentic_system.setup import setup_openai
 from agentic_system.orchestrator import orchestrator
 
+# Full GitHub Archive dataset (default: make seed)
 DEMO_QUESTION = (
     "Show me repositories where users opened PRs but never got one merged — "
     "the ghost contributors. Focus on kcivicrm/civicrm-core."
+)
+
+# Controlled local dataset (make seed LOCAL=1) — 18 rows across 3 repos
+LOCAL_DEMO_QUESTION = (
+    "Show me repositories where users opened PRs but never got one merged — "
+    "the ghost contributors. Focus on org/repo-alpha, org/repo-beta, and org/repo-gamma."
 )
 
 
@@ -88,8 +96,10 @@ def run_query_sync(question: str) -> RunResult:
 if __name__ == "__main__":
     setup_openai()
 
+    question = LOCAL_DEMO_QUESTION if settings.local_seed else DEMO_QUESTION
+
     async def _main() -> None:
-        result = await run_query(DEMO_QUESTION)
+        result = await run_query(question)
         logger.info("Demo run_query completed")
         print(result.final_output)
 
