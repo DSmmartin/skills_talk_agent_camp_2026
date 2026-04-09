@@ -2,7 +2,7 @@
 
 set -eu
 
-: "${MLFLOW_TRACKING_URI:=http://127.0.0.1:5000}"
+: "${MLFLOW_TRACKING_URI:=http://127.0.0.1:5002}"
 : "${MLFLOW_EXPERIMENT_NAME:=ghost-contributors-demo}"
 : "${MLFLOW_DEFAULT_ARTIFACT_ROOT:=/mlflow/artifacts}"
 

@@ -44,9 +44,8 @@ make reset
 ```
 
 Notes:
-- If host port `5000` is busy, MLflow host port auto-falls back (`5002+`) during startup.
 - Default service ports:
-  ClickHouse `8123/9000`, ChromaDB `8000`, MLflow container `5000` (host may differ due to fallback).
+  ClickHouse `8123/9000`, ChromaDB `8000`, MLflow `5002`.
 
 ## Technologies
 

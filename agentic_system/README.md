@@ -35,7 +35,7 @@ NL2SQL multi-agent system for querying the GitHub Archive dataset. Built on the 
 
 ┌──────────────────────────────────────────────────────────┐
 │                   Observability                           │
-│  MLflow autolog → http://localhost:5000                   │
+│  MLflow autolog → http://localhost:5002                   │
 │  loguru file sink → logs/session_<time>.log              │
 └──────────────────────────────────────────────────────────┘
 ```
@@ -227,14 +227,14 @@ All settings are loaded from `.env` via `pydantic-settings`. Copy `.env.example`
 | `CLICKHOUSE_USER` | `default` | ClickHouse user |
 | `CLICKHOUSE_PASSWORD` | _(empty)_ | ClickHouse password |
 | `CLICKHOUSE_DATABASE` | `default` | ClickHouse database |
-| `MLFLOW_TRACKING_URI` | `http://localhost:5000` | MLflow tracking server |
+| `MLFLOW_TRACKING_URI` | `http://localhost:5002` | MLflow tracking server |
 | `MLFLOW_EXPERIMENT_NAME` | `ghost-contributors-demo` | MLflow experiment |
 
 ---
 
 ## Observability
 
-- **MLflow** — `mlflow.openai.autolog()` captures every LLM call automatically as a nested trace (orchestrator → AgentRAG → AgentNL2SQL). View at `http://localhost:5000` under the `ghost-contributors-demo` experiment.
+- **MLflow** — `mlflow.openai.autolog()` captures every LLM call automatically as a nested trace (orchestrator → AgentRAG → AgentNL2SQL). View at `http://localhost:5002` under the `ghost-contributors-demo` experiment.
 - **loguru** — file-only sink at `logs/session_<time>.log`. No stdout output so the Textual TUI owns the terminal cleanly. One file per process launch.
 - Built-in agents SDK tracing is disabled via `set_tracing_disabled(True)` — MLflow is the single active tracing layer.
 

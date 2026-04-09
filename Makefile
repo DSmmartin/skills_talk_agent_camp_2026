@@ -6,18 +6,13 @@ export
 endif
 
 PROJECT_NAME ?= $(notdir $(CURDIR))
-MLFLOW_HOST_PORT ?= 5000
+MLFLOW_HOST_PORT ?= 5002
 CHROMA_HOST_PORT ?= 8000
 CHROMA_BASE_URL ?= http://127.0.0.1:$(CHROMA_HOST_PORT)
 GITHUB_ARCHIVE_TARGET_ROWS ?= 5000000
 GITHUB_ARCHIVE_SOURCE_SUFFIXES ?= aa ab ac ad ae af ag
 
 COMPOSE_CMD := docker compose -p $(PROJECT_NAME) -f docker-compose.yml
-SETUP_MLFLOW_ARG :=
-
-ifneq ($(MLFLOW_HOST_PORT),5000)
-SETUP_MLFLOW_ARG := --mlflow-host-port $(MLFLOW_HOST_PORT)
-endif
 
 .PHONY: help up down seed seed-vectors migrate rollback validate-schema schema-sync schema-sync-dry test-complete-flow verify-complete-flow reset logs clean-complete
 
@@ -39,8 +34,7 @@ help:
 	@printf '%s\n' '  make clean-complete Nuclear clean: stop containers, remove images, volumes, and free ports'
 
 up:
-	./scripts/setup_infra.sh $(SETUP_MLFLOW_ARG)
-
+	./scripts/setup_infra.sh 
 down:
 	$(COMPOSE_CMD) down
 
@@ -73,8 +67,7 @@ verify-complete-flow:
 
 reset:
 	./scripts/cleanup_infra.sh --clear-volumes
-	./scripts/setup_infra.sh --clean-first --clear-volumes $(SETUP_MLFLOW_ARG)
-
+	./scripts/setup_infra.sh --clean-first --clear-volumes 
 logs:
 	$(COMPOSE_CMD) logs --tail 200
 

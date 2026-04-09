@@ -41,7 +41,7 @@ Key files:
 - `mlflow/init/setup.sh`: startup bootstrap for experiment creation.
 
 How it is used:
-- Runs MLflow tracking server on container port `5000`.
+- Runs MLflow tracking server on container port `5002`.
 - Uses SQLite backend and artifacts under `/mlflow`.
 - Experiment `ghost-contributors-demo` is created on startup if missing.
 
