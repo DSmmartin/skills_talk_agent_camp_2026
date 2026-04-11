@@ -216,10 +216,3 @@ __marimo__/
 eng.traineddata
 references_demo/
 .claude/
-
-# Backlog
-backlog/
-skills/backlog-board-status
-skills/backlog-task-creator
-PRODUCT_BACKLOG.md
-scripts/backlog_board.py

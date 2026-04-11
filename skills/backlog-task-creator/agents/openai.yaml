@@ -1,0 +1,7 @@
+interface:
+  display_name: "Backlog Task Creator"
+  short_description: "Create consistent backlog task files."
+  default_prompt: "Use $backlog-task-creator to create or update a backlog task file in backlog/ from PRODUCT_BACKLOG.md."
+
+policy:
+  allow_implicit_invocation: true

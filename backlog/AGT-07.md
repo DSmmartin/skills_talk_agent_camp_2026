@@ -1,0 +1,121 @@
+---
+id: AGT-07
+name: MLflow Tracing via autolog and OpenAI Client Setup
+epic: Epic 2 - Agentic System (Act 1)
+status: [x] Done
+summary: Configure mlflow.openai.autolog() and the provider-aware OpenAI client in agentic_system/setup.py so every agent run is traced automatically.
+---
+
+# AGT-07 - MLflow Tracing via autolog and OpenAI Client Setup
+
+- Epic: Epic 2 - Agentic System (Act 1)
+- Priority: P0
+- Estimate: S
+- Status: [x] Done
+- Source: [PRODUCT_BACKLOG.md](/Users/mmartin/projects/skills_talk_agent_camp_2026/PRODUCT_BACKLOG.md#L633)
+
+## Objective
+
+Enable automatic MLflow tracing for every LLM call in the demo by calling `mlflow.openai.autolog()` in `agentic_system/setup.py`, and disable the built-in agents SDK tracing so a single tracing layer is active.
+
+## Description
+
+The original plan was a custom `trace_agent_call` decorator manually wrapping each agent. This was superseded during AGT-03 when the OpenAI client setup module was introduced.
+
+`mlflow.openai.autolog()` automatically instruments every OpenAI API call — capturing token counts, latency, model, inputs, and outputs — as MLflow traces without any per-agent decorator. Combined with `set_tracing_disabled(True)`, which turns off the built-in agents SDK tracing, this produces clean MLflow runs with one authoritative tracing layer.
+
+This is the observable layer the presenter uses in Act 2 to show the broken SQL (`merged = 1`) was generated and returned zero rows silently.
+
+## Scope
+
+- `agentic_system/setup.py` — `setup_openai()` calls `mlflow.openai.autolog()`, configures `mlflow.set_tracking_uri` and `mlflow.set_experiment`, sets the default OpenAI client (Azure or default), and calls `set_tracing_disabled(True)`.
+- No per-agent decorator file (`mlflow_tracer.py`) is needed.
+
+## Out Of Scope
+
+- Custom `trace_agent_call` decorator (replaced by autolog).
+- MLflow server provisioning (INF-06).
+- loguru setup (AGT-06).
+
+## Deliverables
+
+- `agentic_system/setup.py` — `setup_openai()` with full MLflow configuration and both provider branches. *(Delivered as part of AGT-03.)*
+
+## Acceptance Criteria
+
+- `mlflow.openai.autolog()` is called inside `setup_openai()`.
+- `mlflow.set_tracking_uri(settings.mlflow_tracking_uri)` and `mlflow.set_experiment(settings.mlflow_experiment_name)` are called before autolog.
+- `set_tracing_disabled(True)` disables the built-in agents SDK tracing.
+- After `setup_openai()` is called, any `Runner.run(...)` that reaches the LLM produces a trace visible in the MLflow UI at `http://localhost:5000`.
+
+## Dependencies
+
+- INF-06: MLflow server running at `http://localhost:5000` (runtime only).
+- AGT-03: `agentic_system/setup.py` exists and is the correct module.
+
+## Assumptions
+
+- `mlflow.openai.autolog()` covers all sub-agent LLM calls because they all use the same default OpenAI client set by `set_default_openai_client`.
+- No manual span management is needed for the demo.
+
+## Verification
+
+Procedure used to verify the task against the local Python environment:
+
+1. Parse `agentic_system/setup.py` with `ast.parse`.
+2. Inspect source for all required SDK calls.
+
+Commands used:
+
+```bash
+# Syntax check
+source .venv/bin/activate && python3 -c "
+import ast
+with open('agentic_system/setup.py') as f:
+    ast.parse(f.read())
+print('  OK  agentic_system/setup.py')
+"
+
+# Source inspection for required calls
+source .venv/bin/activate && python3 -c "
+import pathlib
+src = pathlib.Path('agentic_system/setup.py').read_text()
+checks = [
+    ('mlflow.openai.autolog()',   'mlflow.openai.autolog()'),
+    ('mlflow.set_tracking_uri',   'mlflow.set_tracking_uri'),
+    ('mlflow.set_experiment',     'mlflow.set_experiment'),
+    ('set_default_openai_client', 'set_default_openai_client'),
+    ('set_default_openai_api',    'set_default_openai_api'),
+    ('set_tracing_disabled',      'set_tracing_disabled'),
+    ('AsyncAzureOpenAI branch',   'AsyncAzureOpenAI'),
+    ('AsyncOpenAI branch',        'AsyncOpenAI'),
+]
+for label, token in checks:
+    print(f'  {\"OK\" if token in src else \"MISSING\"}  {label}')
+"
+```
+
+Expected verification result (observed on 2026-04-07):
+
+```
+# Syntax check
+  OK  agentic_system/setup.py
+
+# Source inspection
+  OK  mlflow.openai.autolog()
+  OK  mlflow.set_tracking_uri
+  OK  mlflow.set_experiment
+  OK  set_default_openai_client
+  OK  set_default_openai_api
+  OK  set_tracing_disabled
+  OK  AsyncAzureOpenAI branch
+  OK  AsyncOpenAI branch
+```
+
+Note: End-to-end trace visibility in the MLflow UI requires a live MLflow server (INF-06) and at least one `Runner.run(...)` call with a valid OpenAI API key.
+
+## Notes
+
+- The original plan (custom `trace_agent_call` decorator in `agentic_system/observability/mlflow_tracer.py`) was dropped. `mlflow.openai.autolog()` covers the same observability requirement with zero per-agent boilerplate.
+- MLflow trace is the key Act 2 artifact: it will show the SQL generated by AgentNL2SQL used `merged = 1` while returning zero rows — the silent failure made visible.
+- Completed 2026-04-07 as part of AGT-03 implementation.
